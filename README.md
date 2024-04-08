@@ -6,3 +6,18 @@ Features
 1. A querying field where you can give out both DDL and DML queries or can even get back desired records with DQL queries.
 
 2. Business logic functionalities to display the database in field action.
+
+Prerequisites:
+
+  -Oracle Instant Client
+  -Oracle 21c XE
+  -SQL Developer
+
+Installation:
+  
+  -pip install fastAPI[all]
+  -pip install cx_Oracle
+
+Starting up the appliction:
+
+  -uvicorn app.main:app
