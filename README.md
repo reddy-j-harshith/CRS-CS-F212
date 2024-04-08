@@ -9,15 +9,15 @@ Features
 
 Prerequisites:
 
-  Oracle Instant Client
-  Oracle 21c XE
-  SQL Developer
+1. Oracle Instant Client
+2. Oracle 21c XE
+3. SQL Developer
 
 Installation:
   
-  pip install fastAPI[all]
-  pip install cx_Oracle
+1. pip install fastAPI[all]
+2. pip install cx_Oracle
 
 Starting up the appliction:
 
-  uvicorn app.main:app
+uvicorn app.main:app
