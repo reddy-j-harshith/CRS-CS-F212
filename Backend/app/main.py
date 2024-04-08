@@ -1,11 +1,8 @@
 import cx_Oracle as cx
 from fastapi import FastAPI, status, HTTPException
-from pydantic import BaseModel
+from models import Query
 
 app = FastAPI()
-
-class QueryString(BaseModel):
-    query: str
 
 connStr = 'crs/crs123@localhost:1521/xepdb1'
 
@@ -22,7 +19,7 @@ def welcome():
     return {"Message": "Welcome"}
 
 @app.post("/query", status_code=status.HTTP_200_OK)
-def query(query: QueryString):
+def query(query: Query):
     conn = get_connection()
     try:
         curr = conn.cursor()
