@@ -1,6 +1,6 @@
 import cx_Oracle as cx
 from fastapi import FastAPI, status, HTTPException
-from models import Query
+from .models import Query
 
 app = FastAPI()
 
