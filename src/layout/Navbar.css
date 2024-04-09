@@ -1,0 +1,38 @@
+/* Navbar.css */
+
+/* Set background color of the navbar to black */
+.navbar {
+  background-color: black;
+}
+
+/* Set color of navbar brand text to white, font size to 30px, and align to center */
+.navbar-brand {
+  color: white !important;
+  font-size: 30px;
+  text-align: center;
+  width: 100%;
+}
+
+/* Ensure navbar contents take up entire width and center-align the text */
+.navbar .container-fluid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Vertically center items */
+}
+
+/* Set background color of options button to white, text color to black */
+.btn-options {
+  background-color: #fff !important;
+  border-color: #fff !important;
+  color: #000 !important;
+  border-radius: 20px; /* Increase border radius for more rounded corners */
+  padding: 8px 16px; /* Reduce padding */
+  font-size: 16px; /* Reduce font size */
+  margin-right: 10px;
+}
+
+/* Adjust the size of the image */
+.navbar-brand img {
+  width: 25px; /* Set width to smaller value */
+  height: auto; /* Maintain aspect ratio */
+}
