@@ -1,5 +1,5 @@
 -- Primary key constraint for User table
-ALTER TABLE User ADD CONSTRAINT pk_user_id PRIMARY KEY (User_Id);
+ALTER TABLE User_Table ADD CONSTRAINT pk_user_id PRIMARY KEY (User_Id);
 
 -- Primary key constraint for Feedback_System table
 ALTER TABLE Feedback_System ADD CONSTRAINT pk_feedback_id PRIMARY KEY (Feedback_Id);

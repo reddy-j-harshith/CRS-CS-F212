@@ -1,4 +1,4 @@
-CREATE TABLE User (
+CREATE TABLE User_Table (
     User_Id VARCHAR(100),
     First_Name VARCHAR(100),
     Last_Name VARCHAR(100),
