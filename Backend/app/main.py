@@ -41,3 +41,11 @@ def query(query: Query):
     finally:
         curr.close()  # Close cursor
         conn.close()  # Close connection
+
+@app.post("/business/insert", status_code=status.HTTP_201_CREATED)
+
+@app.post("/business/delete", status_code=status.HTTP_204_NO_CONTENT)
+
+@app.post("/business/update", statuc_code=status.HTTP_202_ACCEPTED)
+
+@app.post("/business/read", status_code=status.HTTP_200_OK))
