@@ -31,7 +31,7 @@ ALTER TABLE User_info ADD CONSTRAINT pk_user_id PRIMARY KEY (User_Id);
 -- Primary key constraint for Feedback_System table
 ALTER TABLE Feedback_System ADD CONSTRAINT pk_feedback_id PRIMARY KEY (Feedback_Id);
 -- Primary key constraint for dbs_Maintenance_Schedule table
-ALTER TABLE Maintenance_Schedule ADD CONSTRAINT pk_maintenance_id PRIMARY KEY (Maintenance_Id);
+ALTER TABLE dbs_Maintenance_Schedule ADD CONSTRAINT pk_maintenance_id PRIMARY KEY (Maintenance_Id);
 -- Primary key constraint for Bicycle table
 ALTER TABLE Bicycle ADD CONSTRAINT pk_bicycle_id PRIMARY KEY (Bicycle_Id);
 -- Primary key constraint for Rental table
@@ -43,15 +43,18 @@ ALTER TABLE Customization_Request ADD CONSTRAINT pk_custom_id PRIMARY KEY (Custo
 -- Primary key constraint for Rental_Custom table
 ALTER TABLE Rental_Custom ADD CONSTRAINT pk_rental_custom_id PRIMARY KEY (Rental_Id, Custom_Id);
 
- -- Borrower_Id foreign key constraint referencing User_Id primary key in User table ALTER TABLE Rental ADD CONSTRAINT fk_borrower_id FOREIGN KEY (Borrower_Id) REFERENCES User_info(User_Id);
+ -- Borrower_Id foreign key constraint referencing User_Id primary key in User table 
+ALTER TABLE Rental ADD CONSTRAINT fk_borrower_id FOREIGN KEY (Borrower_Id) REFERENCES User_info(User_Id);
 -- User_Id foreign key constraint in Feedback_System referencing User_Id primary key in User table
 ALTER TABLE Feedback_System ADD CONSTRAINT fk_user_id_feedback FOREIGN KEY (User_Id) REFERENCES User_info(User_Id);
--- Lender_Id foreign key constraint in Bicycle referencing User_Id primary key in User table ALTER TABLE Bicycle ADD CONSTRAINT fk_lender_id FOREIGN KEY (Lender_Id) REFERENCES User_info(User_Id);
+-- Lender_Id foreign key constraint in Bicycle referencing User_Id primary key in User table 
+ALTER TABLE Bicycle ADD CONSTRAINT fk_lender_id FOREIGN KEY (Lender_Id) REFERENCES User_info(User_Id);
 -- Rental_Id foreign key constraint in Extension referencing Rental_Id primary key in Rental table
 ALTER TABLE Extension ADD CONSTRAINT fk_rental_id_extension FOREIGN KEY (Rental_Id) REFERENCES Rental(Rental_Id);
 -- Bicycle_Id foreign key constraint in Maintenance_Schedule referencing Bicycle_Id primary key in Bicycle table
 ALTER TABLE dbs_Maintenance_Schedule ADD CONSTRAINT fk_bicycle_id_maintenance FOREIGN KEY (Bicycle_Id) REFERENCES Bicycle(Bicycle_Id);
--- Bicycle_Id foreign key constraint in Rental referencing Bicycle_Id primary key in Bicycle table ALTER TABLE Rental ADD CONSTRAINT fk_bicycle_id_rental FOREIGN KEY (Bicycle_Id) REFERENCES Bicycle(Bicycle_Id);
+-- Bicycle_Id foreign key constraint in Rental referencing Bicycle_Id primary key in Bicycle table
+ALTER TABLE Rental ADD CONSTRAINT fk_bicycle_id_rental FOREIGN KEY (Bicycle_Id) REFERENCES Bicycle(Bicycle_Id);
 -- Custom_Id foreign key constraint in Rental_Custom referencing Custom_Id primary key in Customization_Request table
 ALTER TABLE Rental_Custom ADD CONSTRAINT fk_custom_id_rental_custom FOREIGN KEY (Custom_Id) REFERENCES Customization_Request(Custom_Id);
 ALTER TABLE Rental_Custom ADD CONSTRAINT fk_rental_id_rental_custom FOREIGN KEY (rental_Id) REFERENCES rental(rental_Id);
