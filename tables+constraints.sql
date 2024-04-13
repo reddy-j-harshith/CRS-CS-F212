@@ -58,3 +58,45 @@ ALTER TABLE Rental ADD CONSTRAINT fk_bicycle_id_rental FOREIGN KEY (Bicycle_Id) 
 -- Custom_Id foreign key constraint in Rental_Custom referencing Custom_Id primary key in Customization_Request table
 ALTER TABLE Rental_Custom ADD CONSTRAINT fk_custom_id_rental_custom FOREIGN KEY (Custom_Id) REFERENCES Customization_Request(Custom_Id);
 ALTER TABLE Rental_Custom ADD CONSTRAINT fk_rental_id_rental_custom FOREIGN KEY (rental_Id) REFERENCES rental(rental_Id);
+
+
+
+CREATE TABLE Status_Lookup (
+    Status VARCHAR2(100)
+);
+
+INSERT INTO Status_Lookup (Status) VALUES ('Available');
+INSERT INTO Status_Lookup (Status) VALUES ('Unavailable');
+INSERT INTO Status_Lookup (Status) VALUES ('Damaged');
+-- Add more status values as needed
+ALTER TABLE Rental ADD Bicycle_Status VARCHAR2(100);
+ALTER TABLE Status_Lookup ADD CONSTRAINT pk_status PRIMARY KEY (Status);
+ALTER TABLE Bicycle ADD CONSTRAINT fk_bicycle_status FOREIGN KEY (Bicycle_Status) REFERENCES Status_Lookup(Status);
+ALTER TABLE Rental ADD CONSTRAINT fk_return_status FOREIGN KEY (Return_Status) REFERENCES Status_Lookup(Status);
+
+
+
+CREATE TABLE Color (
+    Color_Id VARCHAR2(100) PRIMARY KEY,
+    Color_Name VARCHAR2(100)
+);
+CREATE TABLE Bicycle_Color (
+    Bicycle_Id VARCHAR2(100),
+    Color_Id VARCHAR2(100),
+    PRIMARY KEY (Bicycle_Id, Color_Id),
+    FOREIGN KEY (Bicycle_Id) REFERENCES Bicycle(Bicycle_Id),
+    FOREIGN KEY (Color_Id) REFERENCES Color(Color_Id)
+);
+
+
+CREATE TABLE Phone (
+    Phone_Id VARCHAR2(100) PRIMARY KEY,
+    Phone_Number VARCHAR2(100)
+);
+CREATE TABLE User_Phone (
+    User_Id VARCHAR2(100),
+    Phone_Id VARCHAR2(100),
+    PRIMARY KEY (User_Id, Phone_Id),
+    FOREIGN KEY (User_Id) REFERENCES User_Info(User_Id),
+    FOREIGN KEY (Phone_Id) REFERENCES Phone(Phone_Id)
+);
