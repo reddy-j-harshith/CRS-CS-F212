@@ -1,7 +1,8 @@
-CREATE OR REPLACE TRIGGER CreateRentalTrigger
+CREATE OR REPLACE TRIGGER RentalIdTrigger
 BEFORE INSERT ON Rental
 FOR EACH ROW
 BEGIN
-     :NEW.Rental_Id := 'R' || Rental_Id_Seq.NEXTVAL || ROUND(DBMS_RANDOM.VALUE(100, 999));
+    -- Generates a unique Rental_Id using SYS_GUID
+    :NEW.Rental_Id := REPLACE(SYS_GUID(), '-', '');
 END;
 /
