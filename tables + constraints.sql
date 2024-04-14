@@ -69,10 +69,10 @@ INSERT INTO Status_Lookup (Status) VALUES ('Available');
 INSERT INTO Status_Lookup (Status) VALUES ('Unavailable');
 INSERT INTO Status_Lookup (Status) VALUES ('Damaged');
 -- Add more status values as needed
-ALTER TABLE Rental ADD Bicycle_Status VARCHAR2(100);
+
 ALTER TABLE Status_Lookup ADD CONSTRAINT pk_status PRIMARY KEY (Status);
 ALTER TABLE Bicycle ADD CONSTRAINT fk_bicycle_status FOREIGN KEY (Bicycle_Status) REFERENCES Status_Lookup(Status);
-ALTER TABLE Rental ADD CONSTRAINT fk_return_status FOREIGN KEY (Return_Status) REFERENCES Status_Lookup(Status);
+
 
 
 
