@@ -1,7 +1,7 @@
 CREATE OR REPLACE TRIGGER MaintenanceTrigger
-BEFORE INSERT ON Maintenance_Schedule
+BEFORE INSERT ON DBS_Maintenance_Schedule
 FOR EACH ROW
 BEGIN
-    :NEW.Maintenance_Id := Maintenance_Id_SEQ.NEXTVAL;
+  SELECT Maintenance_ID_SEQ.NEXTVAL INTO :NEW.Maintenance_Id FROM DUAL;
 END;
 /

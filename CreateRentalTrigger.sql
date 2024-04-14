@@ -1,0 +1,7 @@
+CREATE OR REPLACE TRIGGER CreateRentalTrigger
+BEFORE INSERT ON Rental
+FOR EACH ROW
+BEGIN
+     :NEW.Rental_Id := 'R' || Rental_Id_Seq.NEXTVAL || ROUND(DBMS_RANDOM.VALUE(100, 999));
+END;
+/
