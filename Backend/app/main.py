@@ -1,8 +1,19 @@
 import cx_Oracle as cx
 from fastapi import FastAPI, status, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from .models import Query
+import uvicorn
 
 app = FastAPI()
+
+# Allow all origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+)
 
 connStr = 'crs/crs123@localhost:1521/xepdb1'
 
@@ -13,10 +24,6 @@ def get_connection():
         return conn
     except cx.Error as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-
-@app.get("/")
-def welcome():
-    return {"Message": "Welcome"}
 
 @app.post("/query", status_code=status.HTTP_200_OK)
 def query(query: Query):
@@ -35,17 +42,8 @@ def query(query: Query):
         conn.commit()
         return {"Message": "The queries have been successfully executed."}
     
-
     except cx.Error as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     finally:
         curr.close()  # Close cursor
         conn.close()  # Close connection
-
-@app.post("/business/insert", status_code=status.HTTP_201_CREATED)
-
-@app.post("/business/delete", status_code=status.HTTP_204_NO_CONTENT)
-
-@app.post("/business/update", statuc_code=status.HTTP_202_ACCEPTED)
-
-@app.post("/business/read", status_code=status.HTTP_200_OK))
