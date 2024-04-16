@@ -3,7 +3,6 @@ import './Home.css';
 
 export default function Home() {
   const [query, setQuery] = useState('');
-  const [error, setError] = useState(null);
   const [tableData, setTableData] = useState([]);
 
   const handleQueryChange = (event) => {
@@ -29,18 +28,13 @@ export default function Home() {
       // Check if the query is a SELECT query
       if (query.trim().toUpperCase().startsWith('SELECT')) {
         setTableData(responseData);
-        setError(null); // Clear any previous errors
       } else {
         // Display message for executed queries other than SELECT
         setTableData([]);
-        setError('Query Executed');
       }
     } catch (error) {
-      if (error.message === 'Bad Request') {
-        setError('Syntax Error: Please check your query syntax.');
-      } else {
-        // Handle other types of errors here
-      }
+      console.error('Error:', error.message);
+      setTableData([]);
     }
   }
 
@@ -52,7 +46,6 @@ export default function Home() {
           <textarea className="form-control" name="postContent" value={query} onChange={handleQueryChange} rows={10} cols={80} />
         </div>
         <button className="btn btn-dark mt-3 go-button" onClick={handleQuerySubmit}>Go</button> {/* Apply custom style */}
-        {error && <div className="text-danger mt-3">{error}</div>}
         {tableData.length > 0 && (
           <div className="mt-3">
             <h3>Query Result:</h3>
