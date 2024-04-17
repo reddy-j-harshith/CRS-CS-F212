@@ -1,6 +1,6 @@
 
 CREATE TABLE user_info (
-    user_id NUMBER PRIMARY KEY,
+    user_id VARCHAR2(20) PRIMARY KEY,
     firstname VARCHAR2(50) NOT NULL,
     lastname VARCHAR2(50) NOT NULL,
     email_address VARCHAR2(100) DEFAULT 'example@example.com' NOT NULL,
@@ -10,10 +10,16 @@ CREATE TABLE user_info (
 );
 
 
+ALTER TABLE user_info ADD CONSTRAINT user_id_format_check
+CHECK (
+    REGEXP_LIKE(user_id, '^20[0-9]{2}[A-Z][0-9]PS[0-9]{4}H$')
+);
+
+
 
 CREATE TABLE rental (
     rental_id NUMBER PRIMARY KEY,
-    borrower_id NUMBER NOT NULL,
+    borrower_id VARCHAR2(20) NOT NULL,
     rental_date DATE NOT NULL,
     deadline DATE,
     return_date DATE,
@@ -28,7 +34,7 @@ CREATE TABLE rental (
 CREATE TABLE bicycle (
     bicycle_id NUMBER PRIMARY KEY,
     bicycle_type VARCHAR2(100) NOT NULL,
-    lender_id NUMBER NOT NULL,
+    lender_id VARCHAR2(20) NOT NULL,
     model_type VARCHAR2(100) NOT NULL,
     bicycle_status VARCHAR2(20) DEFAULT 'available' CHECK (bicycle_status IN ('available', 'unavailable', 'damaged', 'stolen')),
     CONSTRAINT bicycle_lender_fk FOREIGN KEY (lender_id) REFERENCES user_info(user_id) ON DELETE CASCADE
@@ -96,7 +102,7 @@ END;
 
 CREATE TABLE feedback (
     feedback_id NUMBER PRIMARY KEY,
-    user_id NUMBER NOT NULL,
+    user_id VARCHAR2(20) NOT NULL,
     rating NUMBER CHECK (rating >= 1 AND rating <= 10),
     comments VARCHAR2(1000),
     CONSTRAINT feedback_user_fk FOREIGN KEY (user_id) REFERENCES user_info(user_id) ON DELETE CASCADE
@@ -172,7 +178,7 @@ CREATE TABLE rental_custom (
 
 
 CREATE TABLE user_phno (
-    user_id NUMBER,
+    user_id VARCHAR2(20),
     phno VARCHAR2(10) UNIQUE CHECK (LENGTH(phno) = 10),
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES user_info(user_id) ON DELETE CASCADE
 );
