@@ -1,6 +1,8 @@
   --Procedure to confirm rental completion (confirm_rental_completion):  
   
-  
+ /* The confirm_rental_completion procedure updates the return date and rental status of a specified rental
+ based on the provided parameters. If the 'damaged' flag is 'Y', it marks the rental as 'damaged'; otherwise, 
+it marks it as 'inactive'. Finally, it commits the transaction to save the changes to the database.*/
   CREATE OR REPLACE PROCEDURE confirm_rental_completion ( 
       p_rental_id IN rental.rental_id%TYPE,
       p_return_date IN rental.return_date%TYPE,
@@ -20,10 +22,40 @@
       COMMIT;
   END confirm_rental_completion;
   /
+
+
+
+    
   
+  /* The `rental_extension_eligibility` procedure checks if a rental, 
+identified by the provided rental ID, is eligible for an extension by verifying if its return date is null
+ and if the current date is before the rental deadline. It then outputs whether the user is eligible for a
+ rental extension or not.*/
   
-  
-  
+  CREATE OR REPLACE PROCEDURE rental_extension_eligibility (
+    p_rental_id IN rental.rental_id%TYPE,
+    p_eligible OUT BOOLEAN
+)
+IS
+    v_count NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_count
+    FROM rental
+    WHERE rental_id = p_rental_id
+    AND return_date IS NULL
+    AND SYSDATE <= deadline;
+
+    p_eligible := (v_count > 0);
+
+    IF p_eligible THEN
+        DBMS_OUTPUT.PUT_LINE('User is eligible for rental extension.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('User is not eligible for rental extension.');
+    END IF;
+END rental_extension_eligibility;
+/
+
   
   
           
@@ -86,3 +118,5 @@
   END request_extension;
   /
   
+
+
