@@ -1,102 +1,302 @@
-CREATE TABLE User_Info ( User_Id VARCHAR2(100), First_Name VARCHAR2(100), Last_Name VARCHAR2(100), Email_Address VARCHAR2(100), Phno NUMBER,
-User_Type CHAR(1),
-Gender CHAR(1) );
-CREATE TABLE Rental ( Borrower_Id VARCHAR2(100), Rental_Id VARCHAR2(100), Deadline DATE,
-Return_Date DATE, Return_Status VARCHAR2(100), Late_Fees NUMBER, Damage_Fees NUMBER, Amount_Due NUMBER, Bicycle_Id VARCHAR2(100)
-);
-CREATE TABLE Feedback_System (
-Feedback_Id VARCHAR2(100),
-User_Id VARCHAR2(100),
-Rating NUMBER(2,0) CHECK (Rating >= 1 AND Rating <= 10), Comments VARCHAR2(255)
-);
-CREATE TABLE DBS_Maintenance_Schedule (
-Maintenance_Id VARCHAR2(100), Maintenance_Date DATE, Maintenance_Task VARCHAR2(255), Bicycle_Id VARCHAR2(100)
-);
-CREATE TABLE Bicycle (
-Bicycle_Id VARCHAR2(100), Bicycle_Type VARCHAR2(100), Lender_Id VARCHAR2(100), Model_Id VARCHAR2(100), Color VARCHAR2(100), Bicycle_Status VARCHAR2(100)
-);
-CREATE TABLE Extension (
-Extension_Id VARCHAR2(100),
-Rental_Id VARCHAR2(100),
-Extra_Duration INTERVAL DAY TO SECOND,
 
- Extended_Charges NUMBER );
-CREATE TABLE Customization_Request ( Custom_Id VARCHAR2(100), Request_Type VARCHAR2(100), Requirements VARCHAR2(255), Approval_Status VARCHAR2(100), Extra_Charges NUMBER
-);
-CREATE TABLE Rental_Custom (
-Rental_Id VARCHAR2(100),
-Custom_Id VARCHAR2(100) );
--- Primary key constraint for User table
-ALTER TABLE User_info ADD CONSTRAINT pk_user_id PRIMARY KEY (User_Id);
--- Primary key constraint for Feedback_System table
-ALTER TABLE Feedback_System ADD CONSTRAINT pk_feedback_id PRIMARY KEY (Feedback_Id);
--- Primary key constraint for dbs_Maintenance_Schedule table
-ALTER TABLE dbs_Maintenance_Schedule ADD CONSTRAINT pk_maintenance_id PRIMARY KEY (Maintenance_Id);
--- Primary key constraint for Bicycle table
-ALTER TABLE Bicycle ADD CONSTRAINT pk_bicycle_id PRIMARY KEY (Bicycle_Id);
--- Primary key constraint for Rental table
-ALTER TABLE Rental ADD CONSTRAINT pk_rental_id PRIMARY KEY (Rental_Id);
--- Primary key constraint for Extension table
-ALTER TABLE Extension ADD CONSTRAINT pk_extension_id PRIMARY KEY (Extension_Id);
--- Primary key constraint for Customization_Request table
-ALTER TABLE Customization_Request ADD CONSTRAINT pk_custom_id PRIMARY KEY (Custom_Id);
--- Primary key constraint for Rental_Custom table
-ALTER TABLE Rental_Custom ADD CONSTRAINT pk_rental_custom_id PRIMARY KEY (Rental_Id, Custom_Id);
-
- -- Borrower_Id foreign key constraint referencing User_Id primary key in User table 
-ALTER TABLE Rental ADD CONSTRAINT fk_borrower_id FOREIGN KEY (Borrower_Id) REFERENCES User_info(User_Id);
--- User_Id foreign key constraint in Feedback_System referencing User_Id primary key in User table
-ALTER TABLE Feedback_System ADD CONSTRAINT fk_user_id_feedback FOREIGN KEY (User_Id) REFERENCES User_info(User_Id);
--- Lender_Id foreign key constraint in Bicycle referencing User_Id primary key in User table 
-ALTER TABLE Bicycle ADD CONSTRAINT fk_lender_id FOREIGN KEY (Lender_Id) REFERENCES User_info(User_Id);
--- Rental_Id foreign key constraint in Extension referencing Rental_Id primary key in Rental table
-ALTER TABLE Extension ADD CONSTRAINT fk_rental_id_extension FOREIGN KEY (Rental_Id) REFERENCES Rental(Rental_Id);
--- Bicycle_Id foreign key constraint in Maintenance_Schedule referencing Bicycle_Id primary key in Bicycle table
-ALTER TABLE dbs_Maintenance_Schedule ADD CONSTRAINT fk_bicycle_id_maintenance FOREIGN KEY (Bicycle_Id) REFERENCES Bicycle(Bicycle_Id);
--- Bicycle_Id foreign key constraint in Rental referencing Bicycle_Id primary key in Bicycle table
-ALTER TABLE Rental ADD CONSTRAINT fk_bicycle_id_rental FOREIGN KEY (Bicycle_Id) REFERENCES Bicycle(Bicycle_Id);
--- Custom_Id foreign key constraint in Rental_Custom referencing Custom_Id primary key in Customization_Request table
-ALTER TABLE Rental_Custom ADD CONSTRAINT fk_custom_id_rental_custom FOREIGN KEY (Custom_Id) REFERENCES Customization_Request(Custom_Id);
-ALTER TABLE Rental_Custom ADD CONSTRAINT fk_rental_id_rental_custom FOREIGN KEY (rental_Id) REFERENCES rental(rental_Id);
-
-
-
-CREATE TABLE Status_Lookup (
-    Status VARCHAR2(100)
-);
-
-INSERT INTO Status_Lookup (Status) VALUES ('Available');
-INSERT INTO Status_Lookup (Status) VALUES ('Unavailable');
-INSERT INTO Status_Lookup (Status) VALUES ('Damaged');
--- Add more status values as needed
-
-ALTER TABLE Status_Lookup ADD CONSTRAINT pk_status PRIMARY KEY (Status);
-ALTER TABLE Bicycle ADD CONSTRAINT fk_bicycle_status FOREIGN KEY (Bicycle_Status) REFERENCES Status_Lookup(Status);
-
-
-
-
-CREATE TABLE Color (
-    Color_Id VARCHAR2(100) PRIMARY KEY,
-    Color_Name VARCHAR2(100)
-);
-CREATE TABLE Bicycle_Color (
-    Bicycle_Id VARCHAR2(100),
-    Color_Id VARCHAR2(100),
-    PRIMARY KEY (Bicycle_Id, Color_Id),
-    FOREIGN KEY (Bicycle_Id) REFERENCES Bicycle(Bicycle_Id),
-    FOREIGN KEY (Color_Id) REFERENCES Color(Color_Id)
+CREATE TABLE user_info (
+    user_id NUMBER PRIMARY KEY,
+    firstname VARCHAR2(50) NOT NULL,
+    lastname VARCHAR2(50) NOT NULL,
+    email_address VARCHAR2(100) DEFAULT 'example@example.com' NOT NULL,
+    gender CHAR(1) CHECK (gender IN ('F', 'M')),
+    phno VARCHAR2(10) CHECK (LENGTH(phno) = 10),
+    user_type CHAR(1) CHECK (user_type IN ('S', 'F'))
 );
 
 
-CREATE TABLE Phone (
-    Phone_Id VARCHAR2(100) PRIMARY KEY,
-    Phone_Number VARCHAR2(100)
+
+CREATE TABLE rental (
+    rental_id NUMBER PRIMARY KEY,
+    borrower_id NUMBER NOT NULL,
+    rental_date DATE NOT NULL,
+    deadline DATE,
+    return_date DATE,
+    rental_status VARCHAR2(10) DEFAULT 'active' CHECK (rental_status IN ('active', 'inactive','damaged')),
+    late_fees NUMBER DEFAULT 0,
+    damage_fees NUMBER DEFAULT 0,
+    amount_due NUMBER DEFAULT 0,
+    bicycle_id NUMBER NOT NULL
 );
-CREATE TABLE User_Phone (
-    User_Id VARCHAR2(100),
-    Phone_Id VARCHAR2(100),
-    PRIMARY KEY (User_Id, Phone_Id),
-    FOREIGN KEY (User_Id) REFERENCES User_Info(User_Id),
-    FOREIGN KEY (Phone_Id) REFERENCES Phone(Phone_Id)
+
+
+CREATE TABLE bicycle (
+    bicycle_id NUMBER PRIMARY KEY,
+    bicycle_type VARCHAR2(100) NOT NULL,
+    lender_id NUMBER NOT NULL,
+    model_type VARCHAR2(100) NOT NULL,
+    bicycle_status VARCHAR2(20) DEFAULT 'available' CHECK (bicycle_status IN ('available', 'unavailable', 'damaged', 'stolen')),
+    CONSTRAINT bicycle_lender_fk FOREIGN KEY (lender_id) REFERENCES user_info(user_id) ON DELETE CASCADE
 );
+
+ALTER TABLE rental
+ADD CONSTRAINT fk_bicycle_id FOREIGN KEY (bicycle_id) REFERENCES bicycle(bicycle_id) ON DELETE CASCADE;
+ALTER TABLE rental
+ADD CONSTRAINT fk_borrower_id FOREIGN KEY (borrower_id) REFERENCES user_info(user_id) ON DELETE CASCADE;
+
+
+
+
+CREATE OR REPLACE TRIGGER calculate_deadline
+BEFORE INSERT ON rental
+FOR EACH ROW
+BEGIN
+    :NEW.deadline := :NEW.rental_date + 1; -- Assuming deadline is set exactly one day after rental_date
+END;
+/
+
+
+CREATE OR REPLACE TRIGGER update_rental_status_and_return_date
+AFTER INSERT ON rental
+FOR EACH ROW
+BEGIN
+    IF :NEW.return_date IS NOT NULL THEN
+        UPDATE rental
+        SET rental_status = 'inactive'
+        WHERE rental_id = :NEW.rental_id;
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER calculate_late_fees
+BEFORE INSERT OR UPDATE OF return_date ON rental
+FOR EACH ROW
+BEGIN
+    IF :NEW.return_date IS NOT NULL AND :NEW.return_date > :NEW.deadline THEN
+        :NEW.late_fees := (:NEW.return_date - :NEW.deadline) * 100; -- Assuming late fees of 100 units per day
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER update_damage_fees
+BEFORE INSERT OR UPDATE OF rental_status ON rental
+FOR EACH ROW
+BEGIN
+    IF :NEW.rental_status = 'damage' THEN
+        :NEW.damage_fees := 1000; -- Assuming flat damage fee of 1000 units
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER calculate_amount_due
+BEFORE INSERT OR UPDATE OF return_date, damage_fees ON rental
+FOR EACH ROW
+BEGIN
+    :NEW.amount_due := 100 + :NEW.late_fees + :NEW.damage_fees;
+END;
+/
+
+
+
+
+CREATE TABLE feedback (
+    feedback_id NUMBER PRIMARY KEY,
+    user_id NUMBER NOT NULL,
+    rating NUMBER CHECK (rating >= 1 AND rating <= 10),
+    comments VARCHAR2(1000),
+    CONSTRAINT feedback_user_fk FOREIGN KEY (user_id) REFERENCES user_info(user_id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE maintenance_schedule (
+    maintenance_id NUMBER PRIMARY KEY,
+    maintenance_date DATE DEFAULT SYSDATE NOT NULL,
+    maintenance_task VARCHAR2(255) NOT NULL,
+    bicycle_id NUMBER NOT NULL,
+    CONSTRAINT maintenance_bicycle_fk FOREIGN KEY (bicycle_id) REFERENCES bicycle(bicycle_id) ON DELETE CASCADE
+);
+
+
+ CREATE OR REPLACE TRIGGER update_bicycle_status
+AFTER INSERT OR UPDATE OF rental_status ON rental
+FOR EACH ROW
+DECLARE
+    v_bicycle_status VARCHAR2(20);
+BEGIN
+    -- Get the bicycle status based on the return status
+    IF :NEW.rental_status = 'inactive' THEN
+        v_bicycle_status := 'available';
+    ELSIF :NEW.rental_status = 'damaged' THEN
+        v_bicycle_status := 'damaged';
+    END IF;
+
+    -- Update the bicycle status
+    UPDATE bicycle
+    SET bicycle_status = v_bicycle_status
+    WHERE bicycle_id = :NEW.bicycle_id;
+END;
+/
+
+
+
+
+CREATE TABLE extension (
+    extension_id NUMBER PRIMARY KEY,
+    rental_id NUMBER NOT NULL,
+    extra_duration DATE NOT NULL,
+    extra_charges NUMBER,
+    CONSTRAINT extension_rental_fk FOREIGN KEY (rental_id) REFERENCES rental(rental_id) ON DELETE CASCADE
+);
+CREATE OR REPLACE TRIGGER calculate_extra_charges
+BEFORE INSERT ON extension
+FOR EACH ROW
+BEGIN
+    :NEW.extra_charges := 100 * (EXTRACT(DAY FROM :NEW.extra_duration));
+END;
+/
+
+
+
+
+CREATE TABLE customization_request (
+    custom_id NUMBER PRIMARY KEY,
+    request_type VARCHAR2(100),
+    requirements VARCHAR2(1000),
+    approval_status VARCHAR2(20) CHECK (approval_status IN ('approved', 'not approved')),
+    extra_charges NUMBER DEFAULT 100
+);
+
+CREATE TABLE rental_custom (
+    rental_id NUMBER,
+    custom_id NUMBER,
+    CONSTRAINT pk_rental_custom PRIMARY KEY (rental_id, custom_id),
+    CONSTRAINT fk_rental FOREIGN KEY (rental_id) REFERENCES rental(rental_id) ON DELETE CASCADE,
+    CONSTRAINT fk_customization_request FOREIGN KEY (custom_id) REFERENCES customization_request(custom_id) ON DELETE CASCADE
+);
+
+
+
+CREATE TABLE user_phno (
+    user_id NUMBER,
+    phno VARCHAR2(10) UNIQUE CHECK (LENGTH(phno) = 10),
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES user_info(user_id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE bicycle_color (
+    bicycle_id NUMBER,
+    color VARCHAR2(50),
+    CONSTRAINT fk_bicycle FOREIGN KEY (bicycle_id) REFERENCES bicycle(bicycle_id) ON DELETE CASCADE
+);
+
+
+
+
+
+
+
+
+
+
+-- Create sequence
+CREATE SEQUENCE rental_seq
+START WITH 1
+INCREMENT BY 1;
+
+-- Create trigger
+CREATE OR REPLACE TRIGGER rental_trigger
+BEFORE INSERT ON rental
+FOR EACH ROW
+BEGIN
+    :NEW.rental_id := rental_seq.NEXTVAL;
+END;
+/
+
+
+
+
+
+
+
+
+-- Create sequence
+CREATE SEQUENCE feedback_seq
+START WITH 1
+INCREMENT BY 1;
+
+-- Create trigger
+CREATE OR REPLACE TRIGGER feedback_trigger
+BEFORE INSERT ON feedback
+FOR EACH ROW
+BEGIN
+    :NEW.feedback_id := feedback_seq.NEXTVAL;
+END;
+/
+
+
+
+
+
+-- Create sequence
+CREATE SEQUENCE maintenance_seq
+START WITH 1
+INCREMENT BY 1;
+
+-- Create trigger
+CREATE OR REPLACE TRIGGER maintenance_trigger
+BEFORE INSERT ON maintenance_schedule
+FOR EACH ROW
+BEGIN
+    :NEW.maintenance_id := maintenance_seq.NEXTVAL;
+END;
+/
+
+
+
+
+
+-- Create sequence
+CREATE SEQUENCE bicycle_seq
+START WITH 1
+INCREMENT BY 1;
+
+-- Create trigger
+CREATE OR REPLACE TRIGGER bicycle_trigger
+BEFORE INSERT ON bicycle
+FOR EACH ROW
+BEGIN
+    :NEW.bicycle_id := bicycle_seq.NEXTVAL;
+END;
+/
+
+
+
+
+
+-- Create sequence
+CREATE SEQUENCE extension_seq
+START WITH 1
+INCREMENT BY 1;
+
+-- Create trigger
+CREATE OR REPLACE TRIGGER extension_trigger
+BEFORE INSERT ON extension
+FOR EACH ROW
+BEGIN
+    :NEW.extension_id := extension_seq.NEXTVAL;
+END;
+/
+
+
+
+
+
+-- Create sequence
+CREATE SEQUENCE custom_seq
+START WITH 1
+INCREMENT BY 1;
+
+-- Create trigger
+CREATE OR REPLACE TRIGGER custom_trigger
+BEFORE INSERT ON customization_request
+FOR EACH ROW
+BEGIN
+    :NEW.custom_id := custom_seq.NEXTVAL;
+END;
+/
+
