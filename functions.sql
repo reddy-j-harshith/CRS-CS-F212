@@ -39,7 +39,7 @@ END check_bicycle_availability;
 
 
 
-/Function to calculate total amount due for a rental (calculate_total_amount_due):*/
+/*Function to calculate total amount due for a rental (calculate_total_amount_due):*/
 CREATE OR REPLACE FUNCTION calculate_total_amount_due (
     p_rental_id IN rental.rental_id%TYPE
 )
