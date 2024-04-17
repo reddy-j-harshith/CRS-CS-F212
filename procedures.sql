@@ -1,8 +1,5 @@
 --Procedure to confirm rental completion (confirm_rental_completion):  
 
-/*This procedure takes three inputs: p_rental_id (the ID of the rental record to be updated), p_return_date (the date the rental was returned), and p_damaged_flag (a flag indicating if the bicycle was returned damaged).
-It updates the return_date and rental_status fields of the specified rental record based on the input parameters. If the p_damaged_flag is 'Y', it marks the rental status as 'damaged'; otherwise, it marks it as 'inactive'.
-Finally, it commits the transaction to save the changes to the database.*/
 
 CREATE OR REPLACE PROCEDURE confirm_rental_completion ( 
     p_rental_id IN rental.rental_id%TYPE,
