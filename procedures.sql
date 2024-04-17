@@ -4,7 +4,7 @@
 It updates the return_date and rental_status fields of the specified rental record based on the input parameters. If the p_damaged_flag is 'Y', it marks the rental status as 'damaged'; otherwise, it marks it as 'inactive'.
 Finally, it commits the transaction to save the changes to the database.*/
 
-CREATE OR REPLACE PROCEDURE confirm_rental_completion (
+CREATE OR REPLACE PROCEDURE confirm_rental_completion ( 
     p_rental_id IN rental.rental_id%TYPE,
     p_return_date IN rental.return_date%TYPE,
     p_damaged_flag IN VARCHAR2
