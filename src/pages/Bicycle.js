@@ -21,7 +21,7 @@ export default function AddBicycle() {
   const onSubmit = async (e) => {
     e.preventDefault();
     
-    await axios.post("http://localhost:8000/bicycle", bicycle); // Update the endpoint URL if necessary
+    await axios.post("http://localhost:8000/insert-bicycle", bicycle); // Update the endpoint URL if necessary
     navigate("/home");
   }
 
