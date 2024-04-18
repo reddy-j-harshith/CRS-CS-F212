@@ -1,7 +1,4 @@
 /* Add your CSS styles here */
-.form-group {
-  margin-bottom: 20px;
-}
 
 /* Add line spacing */
 .form-group input,
@@ -29,4 +26,17 @@
   justify-content: center;
   align-items: center;
   height: 100vh; /* Center buttons vertically */
+}
+
+/* Customize Add Phone Number Button */
+.btn-success {
+  border-radius: 20px !important; /* Make button rounded */
+  background-color: #000 !important; /* Black background */
+  color: #fff !important; /* White text color */
+  outline: none !important; /* Remove outline */
+}
+
+.btn-success:hover {
+  background-color: #fff !important; /* White background on hover */
+  color: #000 !important; /* Black text color on hover */
 }
