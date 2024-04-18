@@ -17,4 +17,4 @@ Installation:
 
 Starting up the appliction:
 
-uvicorn app.main:app
+uvicorn app.main:app --reload
