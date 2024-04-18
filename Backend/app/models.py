@@ -1,23 +1,24 @@
 from datetime import date
-from pydantic import BaseModel
+from pydantic import BaseConfig, BaseModel
 
 class Query(BaseModel):
     query: str
 
 class User(BaseModel):
     user_id: str
-    first_name: str
-    last_name: str
+    firstname: str
+    lastname: str
     email_address: str
-    user_type: str
     gender: str
+    user_type: str
 
 class Bicycle(BaseModel):
     bicycle_type: str
     lender_id: str
     model_type: str
-    bicycle_status: str
-    
+    class Config(BaseConfig):
+        protected_namespaces = ()
+
 class Extension(BaseModel):
     rental_id: str
     extra_duration: date
@@ -27,9 +28,7 @@ class Rental(BaseModel):
     # rental_id -> Auto gen
     borrower_id: str
     bicycle_id: int
-    deadline: date
-    return_date: date
-    return_status: str
+    deadline: str
     late_fees: int
     damage_fees: int
     amt_due: int
