@@ -1,0 +1,40 @@
+/* Navbar.css */
+
+.navbar {
+  background-color: black;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.title-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  margin-right: 30px;
+}
+
+.title {
+  font-size: 24px; /* Increase font size */
+}
+
+.text-white {
+  color: white;
+}
+
+.btn-options {
+  background-color: transparent;
+  border-color: white;
+  color: white;
+}
+
+.btn-options:hover {
+  background-color: white;
+  color: black;
+}
+
+.options-container {
+  margin-left: 10;
+}

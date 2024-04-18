@@ -1,0 +1,31 @@
+/* Add your CSS styles here */
+.form-group {
+  margin-bottom: 30px; /* Increase margin bottom to 30px */
+}
+
+/* Add line spacing between form groups */
+.form-group + .form-group {
+  margin-top: 30px; /* Add margin top to create vertical spacing */
+}
+
+.btn-primary,
+.btn-danger {
+  border-radius: 20px !important; /* Make buttons rounded */
+  color: #fff !important; /* Make text color white */
+  border-color: transparent !important; /* Make border color transparent */
+}
+
+.btn-primary {
+  background-color: #007bff !important; /* Make submit button blue */
+}
+
+.btn-danger {
+  background-color: #dc3545 !important; /* Make cancel button red */
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Center buttons vertically */
+}
