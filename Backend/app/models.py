@@ -1,4 +1,3 @@
-from datetime import date
 from pydantic import BaseConfig, BaseModel
 
 class Query(BaseModel):
@@ -21,7 +20,7 @@ class Bicycle(BaseModel):
 
 class Extension(BaseModel):
     rental_id: str
-    extra_duration: date
+    extra_duration: str
     ex_charges: int
     
 class Rental(BaseModel):
