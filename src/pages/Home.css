@@ -1,0 +1,35 @@
+/* Home.css */
+
+.container {
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: flex-start; /* Align content to the top of the container */
+  height: 100vh; /* Set the height of the container to the full viewport height */
+}
+
+.text-center {
+  text-align: center; /* Center-align text within the container */
+}
+
+.textarea-container {
+  width: 80%; /* Set the width of the text area container */
+  margin-top: 80px; /* Move the text area 100 pixels down */
+  margin-left: 57px;
+  
+}
+
+.textarea-container textarea {
+  width: 100%; /* Set the width of the text area to 100% of its container */
+}
+
+.go-button {
+  background-color: black; /* Set background color to black */
+  color: white; /* Set text color to white */
+  border: none; /* Remove border */
+  padding: 15px 30px; /* Increase padding */
+  font-size: 18px; /* Increase font size */
+  cursor: pointer; /* Set cursor to pointer */
+  border-radius: 20px; /* Round corners */
+  position: relative; /* Enable positioning */
+  left: -10px; /* Move button 75 pixels to the left */
+}
