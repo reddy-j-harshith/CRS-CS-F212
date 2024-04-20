@@ -69,7 +69,7 @@ CREATE OR REPLACE PROCEDURE create_bicycle_record(
     p_lender_id IN VARCHAR2,
     p_bicycle_type IN VARCHAR2,
     p_model_type IN VARCHAR2,
-    p_color IN VARCHAR2
+
 )
 IS
     v_bicycle_id NUMBER;
@@ -79,10 +79,7 @@ BEGIN
     VALUES (bicycle_seq.NEXTVAL, p_bicycle_type, p_lender_id, p_model_type)
     RETURNING bicycle_id INTO v_bicycle_id;
 
-    -- Insert record into bicycle_color table
-    INSERT INTO bicycle_color(bicycle_id, color)
-    VALUES (v_bicycle_id, p_color);
---output message
+ 
  DBMS_OUTPUT.PUT_LINE('Bicycle record created successfully. Bicycle ID: ' || v_bicycle_id);
 
 END;
@@ -90,7 +87,7 @@ END;
 
 --example
 BEGIN
-    create_bicycle_record('2022A7PS0001H', 'Mountain Bike', 'Model XYZ', 'Red');
+    create_bicycle_record('2022A7PS0001H', 'Mountain Bike', 'Model XYZ');
 END;
 /
 
@@ -287,5 +284,5 @@ END;
 /
 
 
-
+------------------------------------------------------------------------------------------------------
  
