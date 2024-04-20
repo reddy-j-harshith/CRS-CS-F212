@@ -147,13 +147,16 @@ CREATE TABLE extension (
     extra_charges NUMBER,
     CONSTRAINT extension_rental_fk FOREIGN KEY (rental_id) REFERENCES rental(rental_id) ON DELETE CASCADE
 );
+
 CREATE OR REPLACE TRIGGER calculate_extra_charges
 BEFORE INSERT ON extension
 FOR EACH ROW
 BEGIN
-    :NEW.extra_charges := 100 * (EXTRACT(DAY FROM :NEW.extra_duration));
+    :NEW.extra_charges := 100 * :NEW.extra_duration;
 END;
 /
+
+
 
 
 
