@@ -39,21 +39,5 @@ END check_bicycle_availability;
 
 
 
-/*Function to calculate total amount due for a rental (calculate_total_amount_due):*/
-CREATE OR REPLACE FUNCTION calculate_total_amount_due (
-    p_rental_id IN rental.rental_id%TYPE
-)
-RETURN NUMBER
-IS
-    v_total_amount NUMBER;
-BEGIN
-    SELECT 100 + NVL(late_fees, 0) + NVL(damage_fees, 0)
-    INTO v_total_amount
-    FROM rental
-    WHERE rental_id = p_rental_id;
-
-    RETURN v_total_amount;
-END calculate_total_amount_due;
-/
 
 
