@@ -1,3 +1,5 @@
+-- adding and deleting procedures
+------------------------------------------------------------------------------------
 -- 1)   user creation
 CREATE OR REPLACE PROCEDURE create_user(
     p_user_id IN VARCHAR2,
@@ -12,17 +14,9 @@ BEGIN
     -- Insert user information into user_info table
     INSERT INTO user_info(user_id, firstname, lastname, email_address, gender, user_type)
     VALUES (p_user_id, p_firstname, p_lastname, p_email_address, p_gender, p_user_type);
-
-    -- Commit the transaction
-    COMMIT;
-    
     -- Output success message
     DBMS_OUTPUT.PUT_LINE('User created successfully. User ID: ' || p_user_id);
-EXCEPTION
-    WHEN OTHERS THEN
-        -- Error handling
-        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
-        ROLLBACK;
+
 END;
 /
 
@@ -134,9 +128,31 @@ END;
 /
 
 
+----------------------------------------------------------------------------------------------------------
+-- BUSINESS LOGIC
+--     PROCEDURES
+
+-------------------------------------------------------------------------------------------------------------
+  --1) RENT A BICYCLE (CREATES A RECORD IN RENTAL TABLE WITH GIVEN VALUES AND OTHER DEFAULT VALUES)
+ 
 
 
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 --Procedure to confirm rental completion (confirm_rental_completion):  
   
  /* The confirm_rental_completion procedure updates the return date and rental status of a specified rental
