@@ -15,10 +15,6 @@ CHECK (
     REGEXP_LIKE(user_id, '^20[0-9]{2}[A-Z][0-9]PS[0-9]{4}H$')
 );
 
-ALTER TABLE bicycle ADD CONSTRAINT bicycle_id_format_check 
-CHECK (
-    REGEXP_LIKE(user_id, '^20[0-9]{2}[A-Z][0-9]PS[0-9]{4}H$')
-);
 
 CREATE TABLE rental (
     rental_id NUMBER PRIMARY KEY,
