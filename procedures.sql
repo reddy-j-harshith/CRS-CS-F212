@@ -186,6 +186,25 @@ END;
 /
 
 
+-------------------------------------------------------------------------------------------------
+    --3)procedure to enter feedback
+    CREATE OR REPLACE PROCEDURE enter_feedback(
+    p_user_id IN VARCHAR2,
+    p_rating IN NUMBER,
+    p_comments IN VARCHAR2
+)
+IS
+BEGIN
+    -- Insert record into feedback table
+    INSERT INTO feedback(feedback_id, user_id, rating, comments)
+    VALUES (feedback_seq.NEXTVAL, p_user_id, p_rating, p_comments);
+
+    -- Output success message
+    DBMS_OUTPUT.PUT_LINE('Feedback record entered successfully.');
+
+END;
+/
+
 
 
 
