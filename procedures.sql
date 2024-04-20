@@ -88,6 +88,8 @@ BEGIN
     -- Insert record into bicycle_color table
     INSERT INTO bicycle_color(bicycle_id, color)
     VALUES (v_bicycle_id, p_color);
+--output message
+ DBMS_OUTPUT.PUT_LINE('Bicycle record created successfully. Bicycle ID: ' || v_bicycle_id);
 
 END;
 /
@@ -100,7 +102,36 @@ END;
 
 
 
+------------------------------------------------------------------------------------------------------------
 
+
+-- 4) deletion of bicycle record (a person deleted/delists their bicycle from the system
+
+CREATE OR REPLACE PROCEDURE delete_bicycle(
+    p_bicycle_id IN NUMBER
+)
+IS
+BEGIN
+    -- Delete bicycle from bicycle table
+    DELETE FROM bicycle
+    WHERE bicycle_id = p_bicycle_id;
+
+    -- Delete corresponding records from bicycle_color table
+    DELETE FROM bicycle_color
+    WHERE bicycle_id = p_bicycle_id;
+    -- Output success message
+    DBMS_OUTPUT.PUT_LINE('Bicycle with bicycle_id ' || p_bicycle_id || ' deleted successfully.');
+
+END;
+/
+
+
+
+    --example 
+    BEGIN
+    delete_bicycle(123); -- Replace 123 with the actual bicycle_id
+END;
+/
 
 
 
