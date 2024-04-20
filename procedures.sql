@@ -126,6 +126,45 @@ END;
     delete_bicycle(123); -- Replace 123 with the actual bicycle_id
 END;
 /
+-----------------------------------------------------------------------------
+    -- 5) insert phno
+CREATE OR REPLACE PROCEDURE insert_phone(
+    p_user_id IN VARCHAR2,
+    p_phno IN VARCHAR2
+)
+IS
+BEGIN
+    -- Insert phone number into user_phno table
+    INSERT INTO user_phno(user_id, phno)
+    VALUES (p_user_id, p_phno);
+
+    -- Output success message
+    DBMS_OUTPUT.PUT_LINE('Phone number inserted successfully for User ID: ' || p_user_id);
+
+END;
+/
+
+----------------------------------------------------------------------------------------------
+-- 6) insert bicycle_color
+
+    CREATE OR REPLACE PROCEDURE insert_bicycle_color(
+    p_bicycle_id IN NUMBER,
+    p_color IN VARCHAR2
+)
+IS
+BEGIN
+    -- Insert color for the bicycle into bicycle_color table
+    INSERT INTO bicycle_color(bicycle_id, color)
+    VALUES (p_bicycle_id, p_color);
+
+    -- Output success message
+    DBMS_OUTPUT.PUT_LINE('Color inserted successfully for Bicycle ID: ' || p_bicycle_id);
+
+END;
+/
+
+
+
 
 
 ----------------------------------------------------------------------------------------------------------
