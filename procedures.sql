@@ -1,4 +1,112 @@
-  --Procedure to confirm rental completion (confirm_rental_completion):  
+-- 1)   user creation
+CREATE OR REPLACE PROCEDURE create_user(
+    p_user_id IN VARCHAR2,
+    p_firstname IN VARCHAR2,
+    p_lastname IN VARCHAR2,
+    p_email_address IN VARCHAR2,
+    p_gender IN CHAR,
+    p_user_type IN CHAR
+)
+IS
+BEGIN
+    -- Insert user information into user_info table
+    INSERT INTO user_info(user_id, firstname, lastname, email_address, gender, user_type)
+    VALUES (p_user_id, p_firstname, p_lastname, p_email_address, p_gender, p_user_type);
+
+    -- Commit the transaction
+    COMMIT;
+    
+    -- Output success message
+    DBMS_OUTPUT.PUT_LINE('User created successfully. User ID: ' || p_user_id);
+EXCEPTION
+    WHEN OTHERS THEN
+        -- Error handling
+        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+        ROLLBACK;
+END;
+/
+
+
+--example check for user_creation procedure.
+BEGIN
+    create_user('2022A7PS0001H', 'John', 'Doe', 'john.doe@example.com', 'M', 'S');
+END;
+/
+
+
+
+-------------------------------------------------------------------------------------------------------------------  
+
+  
+-- 2) delete_user procedure
+  CREATE OR REPLACE PROCEDURE delete_user(
+    p_user_id IN VARCHAR2
+)
+IS
+BEGIN
+    -- Delete user from user_info table
+    DELETE FROM user_info
+    WHERE user_id = p_user_id;
+
+    -- Commit the transaction
+    COMMIT;
+    
+    -- Output success message
+    DBMS_OUTPUT.PUT_LINE('User with user_id ' || p_user_id || ' deleted successfully.');
+EXCEPTION
+    WHEN OTHERS THEN
+        -- Error handling
+        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+        ROLLBACK;
+END;
+/
+
+
+  --EXAMPLE USAGE
+  BEGIN
+    delete_user('2022A7PS0001H');
+END;
+/
+
+
+-------------------------------------------------------------------------------------------------------------
+--3) bicycle record creation (a person listing/registering their bicycle for rental)
+CREATE OR REPLACE PROCEDURE create_bicycle_record(
+    p_lender_id IN VARCHAR2,
+    p_bicycle_type IN VARCHAR2,
+    p_model_type IN VARCHAR2,
+    p_color IN VARCHAR2
+)
+IS
+    v_bicycle_id NUMBER;
+BEGIN
+    -- Insert record into bicycle table
+    INSERT INTO bicycle(bicycle_id, bicycle_type, lender_id, model_type)
+    VALUES (bicycle_seq.NEXTVAL, p_bicycle_type, p_lender_id, p_model_type)
+    RETURNING bicycle_id INTO v_bicycle_id;
+
+    -- Insert record into bicycle_color table
+    INSERT INTO bicycle_color(bicycle_id, color)
+    VALUES (v_bicycle_id, p_color);
+
+END;
+/
+
+--example
+BEGIN
+    create_bicycle_record('2022A7PS0001H', 'Mountain Bike', 'Model XYZ', 'Red');
+END;
+/
+
+
+
+
+
+
+
+
+  
+--Procedure to confirm rental completion (confirm_rental_completion):  
   
  /* The confirm_rental_completion procedure updates the return date and rental status of a specified rental
  based on the provided parameters. If the 'damaged' flag is 'Y', it marks the rental as 'damaged'; otherwise, 
