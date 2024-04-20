@@ -5,7 +5,7 @@ CREATE TABLE user_info (
     lastname VARCHAR2(50) NOT NULL,
     email_address VARCHAR2(100) DEFAULT 'example@example.com' NOT NULL,
     gender CHAR(1) CHECK (gender IN ('F', 'M')),
-    phno VARCHAR2(10) CHECK (LENGTH(phno) = 10),
+   
     user_type CHAR(1) CHECK (user_type IN ('S', 'F'))
 );
 
