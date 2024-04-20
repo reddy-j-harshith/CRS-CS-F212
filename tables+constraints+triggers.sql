@@ -22,7 +22,7 @@ CREATE TABLE rental (
     rental_date DATE NOT NULL,
     deadline DATE,
     return_date DATE,
-    rental_status VARCHAR2(10) DEFAULT 'active' CHECK (rental_status IN ('active', 'inactive','damaged')),
+    rental_status VARCHAR2(10) DEFAULT 'active' CHECK (rental_status IN ('active', 'inactive','damaged','extended')),
     late_fees NUMBER DEFAULT 0,
     damage_fees NUMBER DEFAULT 0,
     amount_due NUMBER DEFAULT 0,
