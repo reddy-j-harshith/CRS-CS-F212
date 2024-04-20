@@ -143,7 +143,7 @@ END;
 CREATE TABLE extension (
     extension_id NUMBER PRIMARY KEY,
     rental_id NUMBER NOT NULL,
-    extra_duration DATE NOT NULL,
+    extra_duration NUMBER NOT NULL,
     extra_charges NUMBER,
     CONSTRAINT extension_rental_fk FOREIGN KEY (rental_id) REFERENCES rental(rental_id) ON DELETE CASCADE
 );
