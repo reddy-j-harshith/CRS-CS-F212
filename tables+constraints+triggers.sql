@@ -157,6 +157,51 @@ END;
 /
 
 
+CREATE OR REPLACE TRIGGER update_rental_status_on_extension
+FOR INSERT ON extension
+COMPOUND TRIGGER
+    TYPE t_rental_ids IS TABLE OF rental.rental_id%TYPE INDEX BY PLS_INTEGER;
+    v_rental_ids t_rental_ids;
+
+    BEFORE STATEMENT IS
+    BEGIN
+        -- Initialize the collection
+        v_rental_ids.DELETE;
+    END BEFORE STATEMENT;
+
+    AFTER EACH ROW IS
+    BEGIN
+        -- Store the rental_id of the inserted row
+        v_rental_ids(v_rental_ids.COUNT + 1) := :NEW.rental_id;
+    END AFTER EACH ROW;
+
+    AFTER STATEMENT IS
+        v_extra_duration extension.extra_duration%TYPE;
+        v_new_return_date rental.return_date%TYPE;
+    BEGIN
+        FOR i IN 1..v_rental_ids.COUNT LOOP
+            -- Get the extra duration for the current rental_id
+            SELECT extra_duration INTO v_extra_duration
+            FROM extension
+            WHERE rental_id = v_rental_ids(i);
+
+            -- Update rental status to 'extended'
+            UPDATE rental
+            SET rental_status = 'extended'
+            WHERE rental_id = v_rental_ids(i);
+
+            -- Calculate new return date and update in rental table
+            SELECT deadline + v_extra_duration INTO v_new_return_date
+            FROM rental
+            WHERE rental_id = v_rental_ids(i);
+
+            UPDATE rental
+            SET return_date = v_new_return_date
+            WHERE rental_id = v_rental_ids(i);
+        END LOOP;
+    END AFTER STATEMENT;
+END update_rental_status_on_extension;
+/
 
 
 
