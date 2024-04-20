@@ -163,6 +163,27 @@ END;
 -----------------------------------------------------------------------------------------
 
 
+--2) CREATE OR REPLACE PROCEDURE extension_fees(
+    p_rental_id IN NUMBER,
+    p_extra_duration IN NUMBER
+)
+IS
+    v_extra_charges NUMBER;
+BEGIN
+    -- Calculate extra charges
+    v_extra_charges := 100 * p_extra_duration;
+
+    -- Update extension table with extra charges and duration
+    UPDATE extension
+    SET extra_duration = p_extra_duration,
+        extra_charges = v_extra_charges
+    WHERE rental_id = p_rental_id;
+
+    -- Output success message
+    DBMS_OUTPUT.PUT_LINE('Extension fees calculated and updated successfully.');
+
+END;
+/
 
 
 
