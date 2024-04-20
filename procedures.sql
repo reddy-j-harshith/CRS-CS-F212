@@ -160,6 +160,7 @@ BEGIN
 END;
 /
 
+    
 
 
 
@@ -285,4 +286,80 @@ END;
 
 
 ------------------------------------------------------------------------------------------------------
- 
+ ----- JOIN PROCEDURES
+
+--------------------------------------------------------------------------
+--1) Fetch borrowers
+CREATE OR REPLACE PROCEDURE fetch_borrowers(
+    p_lender_id IN VARCHAR2
+)
+IS
+BEGIN
+    -- Fetch user_id and names of borrowers
+    FOR borrower_rec IN (
+        SELECT DISTINCT ui.user_id, ui.firstname, ui.lastname
+        FROM user_info ui
+        JOIN rental r ON ui.user_id = r.borrower_id
+        JOIN bicycle b ON r.bicycle_id = b.bicycle_id
+        WHERE b.lender_id = p_lender_id
+    ) LOOP
+        -- Output the fetched data
+        DBMS_OUTPUT.PUT_LINE('User ID: ' || borrower_rec.user_id);
+        DBMS_OUTPUT.PUT_LINE('Name: ' || borrower_rec.firstname || ' ' || borrower_rec.lastname);
+        DBMS_OUTPUT.PUT_LINE('---------------------------');
+    END LOOP;
+
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('No borrowers found for the specified lender.');
+        WHEN OTHERS THEN
+            -- Error handling
+            DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+END;
+/
+
+
+-----------------------------------------------------------------------------------------
+---2) data of people who borrowed  and lent their bicycle on date1
+CREATE OR REPLACE PROCEDURE fetch_borrowers_and_lenders(
+    p_date1 IN DATE
+)
+IS
+BEGIN
+    -- Fetch data of people who borrowed bicycles on date1
+    FOR borrower_rec IN (
+        SELECT DISTINCT ui.user_id, ui.firstname, ui.lastname
+        FROM user_info ui
+        JOIN rental r ON ui.user_id = r.borrower_id
+        WHERE TRUNC(r.rental_date) = TRUNC(p_date1)
+    ) LOOP
+        -- Output borrower data
+        DBMS_OUTPUT.PUT_LINE('Borrower ID: ' || borrower_rec.user_id);
+        DBMS_OUTPUT.PUT_LINE('Name: ' || borrower_rec.firstname || ' ' || borrower_rec.lastname);
+        DBMS_OUTPUT.PUT_LINE('Action: Borrowed');
+        DBMS_OUTPUT.PUT_LINE('---------------------------');
+    END LOOP;
+
+    -- Fetch data of people who lent bicycles on date1
+    FOR lender_rec IN (
+        SELECT DISTINCT ui.user_id, ui.firstname, ui.lastname
+        FROM user_info ui
+        JOIN bicycle b ON ui.user_id = b.lender_id
+        JOIN rental r ON b.bicycle_id = r.bicycle_id
+        WHERE TRUNC(r.rental_date) = TRUNC(p_date1)
+    ) LOOP
+        -- Output lender data
+        DBMS_OUTPUT.PUT_LINE('Lender ID: ' || lender_rec.user_id);
+        DBMS_OUTPUT.PUT_LINE('Name: ' || lender_rec.firstname || ' ' || lender_rec.lastname);
+        DBMS_OUTPUT.PUT_LINE('Action: Lent');
+        DBMS_OUTPUT.PUT_LINE('---------------------------');
+    END LOOP;
+
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('No data found for the specified date.');
+        WHEN OTHERS THEN
+            -- Error handling
+            DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+END;
+/
