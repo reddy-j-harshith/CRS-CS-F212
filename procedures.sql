@@ -241,7 +241,7 @@ BEGIN
 END;
 /
 
-    --example usage
+   ----------------- --example usage
     BEGIN
     confirm_rental(TO_DATE('2024-04-20', 'YYYY-MM-DD'), 123, 'Y'); -- Replace 123 with the actual rental_id and adjust other inputs as needed
 END;
@@ -249,34 +249,4 @@ END;
 
 
 
-    
---Procedure to confirm rental completion (confirm_rental_completion):  
-  
- /* The confirm_rental_completion procedure updates the return date and rental status of a specified rental
- based on the provided parameters. If the 'damaged' flag is 'Y', it marks the rental as 'damaged'; otherwise, 
-it marks it as 'inactive'. Finally, it commits the transaction to save the changes to the database.*/
-  CREATE OR REPLACE PROCEDURE confirm_rental_completion ( 
-      p_rental_id IN rental.rental_id%TYPE,
-      p_return_date IN rental.return_date%TYPE,
-      p_damaged_flag IN VARCHAR2
-  )
-  IS
-  BEGIN
-      -- Update return date
-      UPDATE rental
-      SET return_date = p_return_date,
-          rental_status = CASE
-                              WHEN p_damaged_flag = 'Y' THEN 'damaged'
-                              ELSE 'inactive'
-                         END
-      WHERE rental_id = p_rental_id;
-      
-      COMMIT;
-  END confirm_rental_completion;
-  /
-
-
-
-  
-
-
+ 
