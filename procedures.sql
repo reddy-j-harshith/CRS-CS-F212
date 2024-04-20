@@ -68,8 +68,7 @@ END;
 CREATE OR REPLACE PROCEDURE create_bicycle_record(
     p_lender_id IN VARCHAR2,
     p_bicycle_type IN VARCHAR2,
-    p_model_type IN VARCHAR2,
-
+    p_model_type IN VARCHAR2
 )
 IS
     v_bicycle_id NUMBER;
