@@ -135,13 +135,32 @@ END;
 -------------------------------------------------------------------------------------------------------------
   --1) RENT A BICYCLE (CREATES A RECORD IN RENTAL TABLE WITH GIVEN VALUES AND OTHER DEFAULT VALUES)
  
+CREATE OR REPLACE PROCEDURE create_rental_record(
+    p_borrower_id IN VARCHAR2,
+    p_rental_date IN DATE,
+    p_bicycle_id IN NUMBER
+)
+IS
+BEGIN
+    -- Insert record into rental table
+    INSERT INTO rental(rental_id, borrower_id, rental_date, bicycle_id)
+    VALUES (rental_seq.NEXTVAL, p_borrower_id, p_rental_date, p_bicycle_id);
+
+    -- Output success message
+    DBMS_OUTPUT.PUT_LINE('Rental record created successfully.');
+
+END;
+/
 
 
 
+-- example 
+    BEGIN
+    create_rental_record('200001JD0001H', TO_DATE('3-Nov-2013', 'DD-Mon-YYYY'), 123);
+END;
+/
 
-
-
-
+-----------------------------------------------------------------------------------------
 
 
 
