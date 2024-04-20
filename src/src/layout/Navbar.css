@@ -1,0 +1,23 @@
+/* Navbar.css */
+.navbar {
+  background-color: black;
+}
+
+.text-white {
+  color: white;
+}
+
+.btn-options {
+  background-color: transparent; /* Set background color to transparent */
+  border-color: white; /* Set border color to white */
+  color: white; /* Set text color to white */
+}
+
+.btn-options:hover {
+  background-color: white; /* Change background color on hover */
+  color: black; /* Change text color on hover */
+}
+
+.rounded-pill {
+  border-radius: 20px; /* Set border radius to make it rounded */
+}
