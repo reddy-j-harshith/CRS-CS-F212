@@ -1,12 +1,12 @@
 import cx_Oracle as cx
+from pydantic import ValidationError
 from fastapi import FastAPI, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from .models import Query, Rental, User, Bicycle
-import uvicorn
+from datetime import datetime
 
 app = FastAPI()
 
-# Allow all origins
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -17,6 +17,7 @@ app.add_middleware(
 
 connStr = 'crs/crs123@localhost:1521/xepdb1'
 
+# Functions
 def get_connection():
     try:
         conn = cx.connect(connStr)
@@ -25,6 +26,52 @@ def get_connection():
     except cx.Error as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
+def create_user_procedure(user_id, firstname, lastname, email_address, gender, user_type, phones):
+    try:
+
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.callproc("create_user", [user_id, firstname, lastname, email_address, gender, user_type])
+
+        for phone in phones:
+            cursor.callproc("insert_phone", [user_id, phone])
+
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+    except cx.DatabaseError as e:
+        print("Database error:", e)
+        raise
+
+def create_bicycle_procedure(bicycle_type, lender_id, model_type, colors):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.callproc("create_bicycle", [bicycle_type, lender_id, model_type])
+
+        cursor.execute("SELECT bicycle_seq.currval FROM DUAL")
+        generated_bicycle_id = cursor.fetchone()[0]
+
+        for color in colors:
+            cursor.callproc("insert_color", [generated_bicycle_id, color])
+
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+        return generated_bicycle_id
+
+    except cx.DatabaseError as e:
+        print("error:", e)
+        raise
+
+
+
+# Basic Querying interface of the database
 @app.post("/query", status_code=status.HTTP_200_OK)
 def query(query: Query):
     conn = get_connection()
@@ -45,78 +92,61 @@ def query(query: Query):
     except cx.Error as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     finally:
-        curr.close()  # Close cursor
-        conn.close()  # Close connection
+        curr.close()  
+        conn.close()  
 
+
+
+# Insertion into the Rental Table
 @app.post("/rental", status_code=status.HTTP_200_OK)
-async def insert_rental(rental: Rental):
-    conn = get_connection()
+async def create_rental_record(rental: Rental):
     try:
-        # Set default values for fields
-        rental_status = 'ACTIVE'
-        return_date = None
-
-        # Insert rental record into database
+        conn = get_connection()
         cursor = conn.cursor()
 
-        cursor.execute(
-            """
-            INSERT INTO rental_table 
-            (borrower_id, bicycle_id, deadline, late_fees, damage_fees, amt_due, rental_status, return_date)
-            VALUES (:borrower_id, :bicycle_id, TO_DATE(:deadline, 'YYYY-MM-DD'), 
-                    :late_fees, :damage_fees, :amt_due, :rental_status, :return_date)
-            """,
-            borrower_id=rental.borrower_id,
-            bicycle_id=rental.bicycle_id,
-            deadline=rental.deadline,
-            late_fees=rental.late_fees,
-            damage_fees=rental.damage_fees,
-            amt_due=rental.amt_due,
-            rental_status=rental_status,
-            return_date=return_date
-        )
-        conn.commit()
-        
-        return {"message": "Rental record inserted successfully"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
-@app.post("/insert-user")
-async def insert_user(user: User):
-    conn = get_connection()
-    try:
-        # Insert user information into the database
-        cursor = conn.cursor()
-        cursor.execute(
-            "INSERT INTO user_info (user_id, firstname, lastname, email_address, gender, user_type) VALUES (:user_id, :first_name, :last_name, :email_address, :gender, :user_type)",
-            user_id=user.user_id,
-            first_name=user.firstname,
-            last_name=user.lastname,
-            email_address=user.email_address,
-            gender=user.gender,
-            user_type=user.user_type
-        )
+        rental_date = datetime.strptime(rental.rental_date, "%Y-%m-%d")
+
+        cursor.callproc("create_rental_record", [rental.borrower_id, rental.bicycle_id, rental_date])
+
         conn.commit()
 
-        return {"message": "User information inserted successfully"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
-@app.post("/insert-bicycle")
-async def create_bicycle(bicycle: Bicycle):
-    conn = get_connection()
-    try:
-        # Insert bicycle data into the database
-        cursor=conn.cursor()
-        cursor.execute(
-            "INSERT INTO bicycle (bicycle_type, lender_id, model_type) VALUES (:bicycle_type, :lender_id, :model_type)",
-            bicycle_type=bicycle.bicycle_type,
-            lender_id=bicycle.lender_id,
-            model_type=bicycle.model_type
-        )
-        conn.commit()
-
-        return {"message": "Bicycle inserted successfully"}
-    except cx.Error as e:
+        return {"message": "Rental record created successfully."}
+    except cx.DatabaseError as e:
         error, = e.args
         raise HTTPException(status_code=500, detail=str(error))
+    finally:
+        cursor.close()
+        conn.close()  
+
+
+@app.post("/create-user")
+async def create_user(user: User):
+    try:
+        user_data = user.dict()
+        
+        create_user_procedure(**user_data)
+        
+        return {"message": "User created successfully."}
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+    except cx.DatabaseError as e:
+        print("Database error:", e)
+        raise
+    
+
+@app.post("/create-bicycle")
+async def create_bicycle(bicycle: Bicycle):
+    try:
+        bicycle_data = bicycle.dict()
+        
+        bicycle_id = create_bicycle_procedure(**bicycle_data)
+        
+        return {"message": "Bicycle created successfully with ID: {}".format(bicycle_id)}
+    
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    
+    except cx.DatabaseError as e:
+        print("Database error:", e)
+        raise
