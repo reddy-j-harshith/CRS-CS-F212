@@ -19,8 +19,12 @@ const Extension = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      // Convert rentalId and numberOfDays to integers
+      const rentalIdInt = parseInt(rentalId);
+      const numberOfDaysInt = parseInt(numberOfDays);
+  
       // Send data to the backend
-      await axios.post('http://localhost:8000/extension', { rentalId, numberOfDays });
+      await axios.post('http://localhost:8000/extension', { rental_id: rentalIdInt, extra_duration: numberOfDaysInt });
       console.log('Extension request submitted successfully.');
       // Redirect to options page after submission
       navigate('/options');
