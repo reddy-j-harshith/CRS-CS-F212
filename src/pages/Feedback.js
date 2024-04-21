@@ -9,12 +9,12 @@ const Feedback = () => {
   const [rating, setRating] = useState('');
   const [comments, setComments] = useState('');
 
-  const handleRentalIdChange = (event) => {
+  const handleUserIdChange = (event) => {
     setUserId(event.target.value);
   };
 
   const handleRatingChange = (event) => {
-    setRating(event.target.value);
+    setRating(parseInt(event.target.value));
   };
 
   const handleCommentsChange = (event) => {
@@ -24,7 +24,12 @@ const Feedback = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.post('http://localhost:8000/feedback', { userId, rating, comments });
+      const feedbackData = {
+        user_id: userId,
+        rating: rating,
+        comments: comments
+      };
+      await axios.post('http://localhost:8000/feedback', feedbackData);
       console.log('Feedback submitted successfully.');
       navigate('/options');
     } catch (error) {
@@ -45,7 +50,7 @@ const Feedback = () => {
                 className="form-control"
                 id="userId"
                 value={userId}
-                onChange={handleRentalIdChange}
+                onChange={handleUserIdChange}
                 required
               />
             </div>
@@ -59,7 +64,7 @@ const Feedback = () => {
                       name="rating"
                       value={value}
                       onChange={handleRatingChange}
-                      checked={rating === value.toString()}
+                      checked={rating === value}
                     />
                     {value}
                   </label>
