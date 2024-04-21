@@ -1,0 +1,30 @@
+/* Add your CSS styles here */
+
+/* Add line spacing */
+.form-group input,
+.form-group select {
+  margin-bottom: 10px;
+}
+
+.btn-primary,
+.btn-danger {
+  border-radius: 20px !important; /* Make buttons rounded */
+  color: #fff !important; /* Make text color white */
+  border-color: transparent !important; /* Make border color transparent */
+}
+
+.btn-primary {
+  background-color: #007bff !important; /* Make delete button blue */
+}
+
+.btn-danger {
+  background-color: #dc3545 !important; /* Make cancel button red */
+  border-radius: 20px !important; /* Make cancel button rounded */
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Center buttons vertically */
+}

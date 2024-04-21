@@ -1,0 +1,52 @@
+/* Confirmation.css */
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.border {
+  border: 1px solid #ced4da;
+}
+
+.rounded {
+  border-radius: 0.25rem;
+}
+
+.m-4 {
+  margin: 1.5rem !important;
+}
+
+.shadow {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.form-group input,
+.form-group select {
+  margin-bottom: 10px;
+}
+
+.btn-primary,
+.btn-danger {
+  border-radius: 20px !important;
+  color: #fff !important;
+  border-color: transparent !important;
+}
+
+.btn-primary {
+  background-color: #007bff !important;
+}
+
+.btn-danger {
+  background-color: #dc3545 !important;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3 !important;
+}
+
+.btn-danger:hover {
+  background-color: #c82333 !important;
+}

@@ -1,0 +1,13 @@
+.new-button {
+  width: 120px; /* Set the width of the new buttons */
+  background-color: red; /* Example background color */
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 15px 30px;
+  margin: 10px 0;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-size: 15px; /* Increase font size */
+}
