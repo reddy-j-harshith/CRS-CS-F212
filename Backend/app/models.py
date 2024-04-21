@@ -1,4 +1,3 @@
-from datetime import date
 from pydantic import BaseConfig, BaseModel
 from typing import List
 
@@ -23,11 +22,11 @@ class Bicycle(BaseModel):
         protected_namespaces = ()
 
 class Extension(BaseModel):
-    rental_id: str
-    extra_duration: date
+    rental_id: int
+    extra_duration: int
     
 class Feedback(BaseModel):
-    rental_id: str
+    user_id: str
     rating: int
     comments: str
 
@@ -35,3 +34,14 @@ class Rental(BaseModel):
     borrower_id: str
     bicycle_id: int
     rental_date: str
+
+class Confirmer(BaseModel):
+    rental_id: int
+    return_date: str
+    damaged_flag: str
+
+class deleteUser(BaseModel):
+    user_id: str
+
+class deleteBicycle(BaseModel):
+    bicycle_id: int
