@@ -2,7 +2,7 @@ import cx_Oracle as cx
 from pydantic import ValidationError
 from fastapi import FastAPI, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from .models import Query, User, Bicycle, Extension, Feedback, Rental, Confirmer, deleteUser, deleteBicycle
+from .models import Query, User, Bicycle, Extension, Feedback, Rental, confirmObject
 from datetime import datetime
 
 app = FastAPI()
@@ -133,14 +133,14 @@ async def create_rental_record(rental: Rental):
         conn.close()  
 
 @app.post("/rent-confirm", status_code=status.HTTP_202_ACCEPTED)
-def confirm(confirmer: Confirmer):
+def confirm(confirm: confirmObject):
     try:
         conn = get_connection()
         cursor = conn.cursor()
 
-        rtn_date = datetime.strptime(confirmer.return_date, "%Y-%m-%d")
+        rtn_date = datetime.strptime(confirm.return_date, "%Y-%m-%d")
 
-        cursor.callproc("confirm_rental", [confirmer.rental_id, rtn_date, confirmer.damaged_flag])
+        cursor.callproc("confirm_rental", [confirm.rental_id, rtn_date, confirm.damaged_flag])
 
     except ValidationError as e:
         return HTTPException(status_code=422, detail=str(e))
@@ -172,18 +172,18 @@ async def create_user(user: User):
         print("Database error:", e)
         raise
     
-@app.post("/delete-user", status_code=status.HTTP_204_NO_CONTENT)
-def delete_user(user: deleteUser):
+@app.delete("/delete-user/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(user_id: str):
     try:
         conn = get_connection()
         cursor = conn.cursor()
 
-        cursor.callproc("delete_user", [user.user_id])
+        cursor.callproc("delete_user", [user_id])
 
         conn.commit()
 
     except ValidationError as e:
-        raise HTTPException(status_code=422, detail=str(e))        
+        raise HTTPException(status_code=422, detail=str(e)) 
 
 
 
@@ -206,13 +206,13 @@ async def create_bicycle(bicycle: Bicycle):
         print("Database error:", e)
         raise
 
-@app.post("/delete-bicycle", status_code=status.HTTP_204_NO_CONTENT)
-async def create_bicycle(bicycle: deleteBicycle):
+@app.delete("/delete-bicycle/{bicycle_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def create_bicycle(bicycle_id: int):
     try:
         conn = get_connection()
         cursor = conn.cursor()
         
-        cursor.callproc("delete_bicycle", [bicycle.bicycle_id])
+        cursor.callproc("delete_bicycle", [bicycle_id])
         conn.commit()
         
     except ValidationError as e:

@@ -14,7 +14,7 @@ const DelUser = () => {
   const handleDeleteUser = async () => {
     try {
       // Send delete request to the backend
-      await axios.delete(`http://localhost:8000/deluser`);
+      await axios.delete(`http://localhost:8000/delete-user/${userId}`);
       console.log('User deleted successfully.');
       // Redirect to options page after deletion
       navigate('/options');

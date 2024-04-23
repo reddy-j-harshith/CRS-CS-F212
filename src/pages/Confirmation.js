@@ -20,14 +20,30 @@ const Confirmation = () => {
     setDamagedFlag(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle form submission
-    console.log('Rental ID:', rentalId);
-    console.log('Return Date:', returnDate);
-    console.log('Damaged Flag:', damagedFlag);
-    // Redirect to options page after submission
-    navigate('/options');
+    try {
+      const response = await fetch('http://localhost:8000/rent-confirm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          rental_id: rentalId, // Corrected field name
+          return_date: returnDate, // Corrected field name
+          damaged_flag: damagedFlag, // Corrected field name
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Rental confirmed successfully');
+        navigate('/options');
+      } else {
+        console.error('Failed to confirm rental');
+      }
+    } catch (error) {
+      console.error('Error occurred:', error);
+    }
   };
 
   return (

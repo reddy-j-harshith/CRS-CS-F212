@@ -35,13 +35,7 @@ class Rental(BaseModel):
     bicycle_id: int
     rental_date: str
 
-class Confirmer(BaseModel):
+class confirmObject(BaseModel):
     rental_id: int
     return_date: str
     damaged_flag: str
-
-class deleteUser(BaseModel):
-    user_id: str
-
-class deleteBicycle(BaseModel):
-    bicycle_id: int

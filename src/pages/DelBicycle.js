@@ -13,8 +13,8 @@ const DelBicycle = () => {
 
   const handleDeleteBicycle = async () => {
     try {
-      // Send delete request to the backend
-      await axios.delete(`http://localhost:8000/delbicycle`);
+      // Send delete request to the backend with bicycleId as a path parameter
+      await axios.delete(`http://localhost:8000/delete-bicycle/${bicycleId}`);
       console.log('Bicycle deleted successfully.');
       // Redirect to options page after deletion
       navigate('/options');
