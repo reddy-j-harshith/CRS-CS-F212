@@ -14,6 +14,7 @@ Installation:
 
 1. pip install fastAPI[all]
 2. pip install cx_Oracle
+3. Prior to using the application, please implement all the relevant database triggers, procedures, functions, etc.,
 
 Starting up the appliction:
 
