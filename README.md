@@ -18,5 +18,5 @@ Installation:
 
 Starting up the appliction:
 
-1. uvicorn app.main:app --reload.
-2. The server starts at "http://localhost:8080".
+1. uvicorn app.main:app --reload
+2. The server starts at "http://localhost:8080"
